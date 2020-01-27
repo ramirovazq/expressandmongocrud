@@ -1,0 +1,24 @@
+<h1>Detalle de persona</h1>
+<form action="/update" method="post">
+<p>
+    Nombre <%= person.name %>
+</p>
+
+<p>
+	<input type="hidden" name="username" value="<%= person.name %>">
+    Age <input type="text" name="age" value="<%= person.age %>">
+</p>
+<input type="submit" value="actualizar">
+</form>
+
+
+<form action="/delete" method="post">
+<p>
+	<input type="hidden" name="username" value="<%= person.name %>">
+</p>
+<input type="submit" value="borrar">
+</form>
+
+
+<a href="/public/personal.html">Nueva persona</a><br/>
+<a href="/all">Todos</a>

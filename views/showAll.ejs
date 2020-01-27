@@ -1,0 +1,10 @@
+
+
+<p> Listado de personas:
+    <ul>
+        <% people.forEach( (persona) => { %>
+        <li>Nombre: <a href="/person?name=<%= persona.name %>"><%= persona.name %></a>, Edad: <%= persona.age %></li>
+        <% }); %>
+    </ul>
+</p>
+<a href="/">nueva persona</a>
