@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buscador de libros</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <form>
+        <p>
+        Title <input name="title"></p>
+        <p>
+        Author name <input name="author"></p>
+        <p>
+        Year <input name="year"></p>
+    </form>
+
+    <ul>
+        <div id="results"></div>
+    </ul>
+
+    <script type="text/javascript">
+        $("input").on("change input textInput", ()=>{
+            var title = $("input[name='title']").val();
+            var author = $("input[name='author']").val();
+            var year = $("input[name='year']").val();
+
+            var query = '?';
+            if (title) query += 'title=' + title + '&';
+            if (author) query += 'name=' + author + '&';
+            if (year) query += 'year=' + year;
+
+            var url = 'http://localhost:3000/api/' + query;
+
+            $.getJSON(url, (books, status) => {
+                console.log("books...");
+                console.log(books);
+                var results = $("#results");
+                if (Object.keys(books).length != 0) {
+                    results.html('');
+                    books.forEach( (book) => {
+                        results.append('<li><i>' + book.title + '</i>, ');
+                        book.authors.forEach( (author) => {
+                            if (author.name) results.append(author.name + ', ');
+                        });
+                        results.append(book.year + '</li>');
+                    })
+                } else {
+                    results.html('vacio');
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -4,10 +4,118 @@ var app = express();
 app.set('view engine', 'ejs')
 var bodyParser = require('body-parser');
 var Person = require('./Person.js')
+var Book = require('./Book.js')
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/public', express.static('static_files'));
 
+app.use('/createBook', (req,res) => {
+    console.log(req.body);
+
+    var newBook = new Book(req.body);
+    newBook.save((err) => {
+        if (err) {
+            res.type('html').status(500);
+            res.send('Error:' + err);
+        } else {
+            res.render('bookcreated', {book: newBook});
+        }
+    });
+});
+
+
+app.use('/searchBook', (req,res) => {
+    console.log(req.body);
+    if (req.body.wich == 'all'){
+        searchAll(req, res);
+    } else if (req.body.wich == 'any') {
+        searchAny(req, res);
+    } else {
+        searchAll(req, res);
+    }
+
+});
+
+app.use('/api', (req,res) => {
+    
+    var query = {};
+    if (req.query.title) {
+        query.title = {$regex: req.query.title};
+    }
+
+    if (req.query.year) {
+        query.year = req.query.year;
+    }
+
+    if (req.query.name) {
+        query['authors.name'] = {$regex: req.query.name};
+    }
+    console.log("this is de api ....... query");
+    console.log(query);
+    
+    if (Object.keys(query).length != 0) {
+
+        Book.find( query, (err, books) => {
+            if (!err) {
+                res.json(books);
+            } else {
+                console.log(err);
+                res.json({});
+            }
+        })
+    } else {
+        res.json({});
+    }
+});
+
+
+function searchAll(req, res) {
+    var query = {};
+    if (req.body.title) {
+        query.title = req.body.title;}
+    if (req.body.year) {
+        query.year = req.body.year;}
+    if (req.body.name) {
+        query['authors.name'] = req.body.name;}
+    console.log(query);
+    Book.find( query, (err, books) => {
+        if (err) {
+            res.type('html').status(500);
+            res.send('Error:'+ err);
+        } else {
+            res.render('books', {books: books});
+        }
+    })
+} // searchAll
+
+function searchAny(req, res) {
+    var terms = [];
+    if (req.body.title)
+        terms.push({title: { $regex: req.body.title } }); 
+
+    if (req.body.year) 
+        terms.push({year: req.body.year});
+
+    if (req.body.name) 
+        terms.push({'authors.name': req.body.name});
+
+    console.log("terms array ......");
+    console.log(terms);
+    var query = { $or: terms}
+    console.log("query ......");
+    console.log(query);
+
+
+
+    Book.find( query, (err, books) => {
+        if (err) {
+            res.type('html').status(500);
+            res.send('Error:'+ err);
+        } else {
+            res.render('books', {books: books});
+        }
+    }).sort({'title': 'asc'});
+} // searchAll
 
 app.use('/delete', (req,res) => {
     searchName =  req.body.username;

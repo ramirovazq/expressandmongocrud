@@ -1,0 +1,21 @@
+
+
+<p> Resultados de busqueda:
+    <ul>
+        <% books.forEach( (book) => { %>
+        <li>
+            Titulo: <%= book.title %>, Year: <%= book.year %>
+
+            <ul>
+                    <% book.authors.forEach( (autor) => { %>
+                    <li>
+                        <%= autor.name %>                                    
+                    </li>
+                    <% }); %>
+            </ul>
+
+        </li>
+        <% }); %>
+    </ul>
+</p>
+<a href="/public/searchbook.html">nueva busqueda</a>

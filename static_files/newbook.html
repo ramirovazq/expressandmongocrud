@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>nuevo libro</title>
+</head>
+<body>
+
+	<form action="/createBook" method="post">
+		<p>
+		Title <input name="title"></p>
+		<p>
+		Year <input name="year"></p>
+
+		<p>
+		Author #1: <br>
+		Name: <input name="authors[0][name]"> 
+		Affiliation: <input name="authors[0][affiliation]"> 
+		</p>
+
+		<p>
+		Author #2: <br>
+		Name: <input name="authors[1][name]"> 
+		Affiliation: <input name="authors[1][affiliation]"> 
+		</p>
+
+		<input type="submit" name="Guardar">
+
+	</form>
+</body>
+</html>
